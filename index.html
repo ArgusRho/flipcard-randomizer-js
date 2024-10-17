@@ -1,12 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Matching Game</title>
+  <style>
+    /* Grid container styling */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(5, 10vh); /* 5 columns */
+      grid-template-rows: repeat(4, 10vh);    /* 4 rows */
+      gap: 10px; /* Space between the grid items */
+      justify-content: center; /* Center grid horizontally */
+      align-items: center; /* Align items vertically */
+      margin-top: 50px;
+    }
+
+    /* Card styling */
+    .grid-item {
+      height: 100%;
+      width: 100%;
+      background-color: #4CAF50;
+      color: black;
+      font-size: 24px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Styling for matched cards */
+    .matched {
+      background-color: #d7ff6a; /* Light green for matched cards */
+      pointer-events: none; /* Disable clicking on matched cards */
+    }
+
+    /* Styling for clicked cards */
+    .selected {
+      background-color: #FF6347; /* Tomato color when selected */
+    }
+  </style>
 </head>
 <body>
-    
+  <button id="start-btn">start</button>
+
+  <div class="grid-container" id="grid-container">
+    <!-- The cards will be dynamically inserted here -->
+  </div>
+
+  <p id="win-message" style="text-align:center; font-size:20px; color:green; display:none;">
+    You Win! All pairs matched.
+  </p>
+
+  <script src="engine.js"></script>
+
 </body>
-<script src="shuffle_fisher_yates.js"></script>
 </html>
