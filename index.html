@@ -23,8 +23,8 @@
     }
     .image-container {
       z-index: 1; /* Keep it behind the cards */
-      width: 60vw;
-      height: 60vw; /* This ensures the height will match the width */
+      width: 100%;
+      height: 100%; /* This ensures the height will match the width */
       background-size: 100%;
       background-position: center;
       /*we need absolute to overlap things*/
@@ -35,11 +35,12 @@
     .grid-container {
       z-index: 2;
       display: grid;
-      width: 60vw;
-      height: 60vw;
-      grid-template-columns: repeat(5, 25%); /* 5 columns */
-      grid-template-rows: repeat(4, 25%);    /* 4 rows */
+      width: 100%;
+      height: 100%;
+      grid-template-columns: repeat(5, 20%); /* 5 columns */
+      grid-template-rows: repeat(5, 20%);    /* 4 rows */
       /*gap: 10px; /* Space between the grid items */
+      /*row-gap: 5%;*/
       /*justify-content: center; /* Center grid horizontally */
       /*align-items: center; /* Align items vertically */
       

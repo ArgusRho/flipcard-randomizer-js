@@ -1,11 +1,10 @@
 //class is for superset
 //id is for subset
 
-function shuffler(){
-    let array = [1,2,3,4,5,6,7,8,9,10];
+function shuffler(array){
     //fisher-yates shuffle
-    for(let i = array.length - 1; i >= 0; i--){
-        let randomIndex = Math.floor(Math.random() * (i + 1));// by multiplying without adding 1, we generate from 0 to 9
+    for(let i = array.length - 1; i >= 0; i--){//iterate from back to front
+        let randomIndex = Math.floor(Math.random() * (i + 1));
         [array[i], array[randomIndex]] = [array[randomIndex], array[i]]; //destructuring assignment: Swap the element at i with the element at randomIndex
     }
     console.log("shuffled: ", array);
@@ -86,7 +85,9 @@ function winCheck(matchcount, win){
         document.getElementById('win-message').style.display = 'block';
         console.log("win");
     }
-    console.log("[no win]");
+    else{
+        console.log("[no win]");
+    }
 }
 
 //most of the game session values stay here
@@ -109,6 +110,15 @@ function gameloop(win){
             //print what gets clicked in console
             console.log("clicked ", grid.textContent);
             
+            //we can assign special behavior to zero
+            if (grid.getAttribute('data-number') == '0') {
+                //grid.style.visibility = 'hidden'; // Hide zero immediately
+                grid.classList.add('hidden');
+                matchcount++;
+                console.log("Bonus zero clicked, disappears!");
+                return;  // No need to proceed with matching and push logic for zero. thus not assign it into selectedCards array
+            }
+
             //push the entire grid div object as an element in the array
             selectedCards.push(grid);
 
@@ -129,8 +139,8 @@ function setBackgroundImage(imageNum) {
     // Set the background image based on the level or game state
     //get the element using its class by typing dot `.`, if id, we use #
     let playground = document.querySelector('#image-container'); 
-    playground.style.backgroundImage = `url('img/num${imageNum}.png')`;
-    playground.style.backgroundSize = 'top/cover';
+    playground.style.backgroundImage = `url('img/num${imageNum}.jpg')`;
+    playground.style.backgroundSize = 'cover';
     playground.style.backgroundPosition = 'center';
 }
 
@@ -140,32 +150,57 @@ function reset(){
     let container = document.getElementById('grid-container');
     
     // Clear the container's contents (this removes added elements from previous games)
-    //container.innerHTML = '';
+    container.innerHTML = '';
 
     // Only remove the grid items, not all
-    container.querySelectorAll('.grid-item').forEach(item => item.remove());
+    //container.querySelectorAll('.grid-item').forEach(item => item.remove());
 
+    //removing win message if exist
     document.getElementById('win-message').style.display = 'none';
+
+    //removing background image
+    let playground = document.querySelector('#image-container'); 
+    playground.style.backgroundImage = `none`;
 }
 
 function start(){
+    let array = [0,1,2,3,4,5,6,7,8,9,10,11,12];
     reset();
     console.log("[random1 shuffling]");
-    let random1 = shuffler();
+    let random1 = shuffler(array);
     console.log("[random2 shuffling] ");
-    let random2 = shuffler();
+    let random2 = shuffler(array);
     let randoms = random1.concat(random2);
     console.log("[concatenated] ", randoms);
-    let length = randoms.length;
-    console.log("[length] ", length);
     console.log("shuffling ends");
 
-    gridmaker(randoms);
+    //the grids must build perfect square when arranged.
+    /*
+    so I remove one zero from the randoms array. 
+    because perfect square can only be formed when the grids
+    is on odd number. while pairs are even number.
+    */
+    // Remove one zero from the shuffled array
+    let zeroIndex = randoms.indexOf(0);  // Find the index of the first zero
+    randoms.splice(zeroIndex, 1);  // Remove one zero
+    /*
+    but this only removes the first 0, meaning the 2nd zero will be always
+    on the 2nd parts of the grid. so we shuffle it again
+    */
+    console.log("[one zero removed:] ");
+    let finalRandom = shuffler(randoms);
+    
+    let length = finalRandom.length;
+    console.log("[length] ", length);
 
-    imageNumber = 1;
+    gridmaker(finalRandom);
+
+    imageArray = [1,2,3];
+    imageArrayShuffle = shuffler(imageArray);
+    imageNumber = imageArrayShuffle[0];//the first element will be the image number
     setBackgroundImage(imageNumber);//set after the DOM made and loaded by gridmaker
 
-    gameloop(randoms.length);
+    gameloop(finalRandom.length);
     
 }
 
