@@ -5,19 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Card Matching Game</title>
   <style>
-    /* Grid container styling */
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(5, 10vh); /* 5 columns */
-      grid-template-rows: repeat(4, 10vh);    /* 4 rows */
-      gap: 10px; /* Space between the grid items */
-      justify-content: center; /* Center grid horizontally */
-      align-items: center; /* Align items vertically */
+    .centering-container {
+      /*maybe because play-container uses relative so it cannot centers its childs
+      so I made it the same as the child's size, then use centering-container to center them*/
+      width: 100vw;
+      height: 60vw;
+      display: flex;
+      justify-content: center;
+    }
+    .overlapping-container {
+      position: relative;
+      /*this must be relative so the absolutes inside this container
+      doesnt follow the entire document's top and left, but this container's*/
       margin-top: 50px;
+      width: 60%;
+      aspect-ratio: 1 / 1;
+    }
+    .image-container {
+      z-index: 1; /* Keep it behind the cards */
+      width: 60vw;
+      height: 60vw; /* This ensures the height will match the width */
+      background-size: 100%;
+      background-position: center;
+      /*we need absolute to overlap things*/
+      position:absolute; /*absolute to play-container, because that one is relative*/
+      top: 0px;
+      left: 0px;
+    }
+    .grid-container {
+      z-index: 2;
+      display: grid;
+      width: 60vw;
+      height: 60vw;
+      grid-template-columns: repeat(5, 25%); /* 5 columns */
+      grid-template-rows: repeat(4, 25%);    /* 4 rows */
+      /*gap: 10px; /* Space between the grid items */
+      /*justify-content: center; /* Center grid horizontally */
+      /*align-items: center; /* Align items vertically */
+      
+      position:absolute; /*absolute to play-container, because that one is relative*/
+      top: 0px;
+      left: 0px;
     }
 
     /* Card styling */
     .grid-item {
+      z-index: 999;
       height: 100%;
       width: 100%;
       background-color: #4CAF50;
@@ -28,13 +61,13 @@
       justify-content: center;
       align-items: center;
       border-radius: 8px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+      /*box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);*/
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
 
     /* Styling for matched cards */
-    .matched {
+    .open-card {
       background-color: #d7ff6a; /* Light green for matched cards */
       pointer-events: none; /* Disable clicking on matched cards */
     }
@@ -43,13 +76,23 @@
     .selected {
       background-color: #FF6347; /* Tomato color when selected */
     }
+    .hidden {
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
   </style>
 </head>
-<body>
-  <button id="start-btn">start</button>
 
-  <div class="grid-container" id="grid-container">
-    <!-- The cards will be dynamically inserted here -->
+  <button id="start-btn">start</button>
+  <button id="reset-btn">reset</button>
+
+  <div class="centering-container">
+  <div class="overlapping-container">
+    <div class="image-container" id="image-container"></div>
+    <div class="grid-container" id="grid-container">
+      <!-- The cards will be dynamically inserted here -->
+    </div>
+  </div>
   </div>
 
   <p id="win-message" style="text-align:center; font-size:20px; color:green; display:none;">
