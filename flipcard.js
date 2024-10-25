@@ -83,8 +83,11 @@ function matchCheck(card) {
 function winCheck(matchcount, win) {
   console.log("[checking win...]");
   if (matchcount == win) {
-    document.getElementById("win-message").style.display = "block";
-    console.log("win");
+    clearInterval(timerInterval);
+    setTimeout(() => {
+      window.alert("You Win! All pairs matched.");
+      console.log("win");
+    }, 300); // Delay by 300ms
   } else {
     console.log("[no win]");
   }
@@ -148,8 +151,34 @@ function setBackgroundImage(imageNum) {
   playground.style.backgroundPosition = "center";
 }
 
+let timerInterval;
+let startTime;
+
+function startClock() {
+  startTime = Date.now(); // Record the start time
+  timerInterval = setInterval(updateClock, 1000); // Update the clock every second
+}
+
+function updateClock() {
+  const now = Date.now();
+  const elapsedTime = Math.floor((now - startTime) / 1000); // Calculate elapsed time in seconds
+  document.getElementById("clock").textContent = formatTime(elapsedTime);
+}
+
+function formatTime(seconds) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`; // Format as mm:ss
+}
+
+function resetClock() {
+  clearInterval(timerInterval); // Stop the clock
+  document.getElementById("clock").textContent = "0:00"; // Reset the clock display
+}
+
 function reset() {
   console.log("[RESET]");
+  resetClock();
   //get the grid container
   let container = document.getElementById("grid-container");
 
@@ -159,9 +188,6 @@ function reset() {
   // Only remove the grid items, not all
   //container.querySelectorAll('.grid-item').forEach(item => item.remove());
 
-  //removing win message if exist
-  document.getElementById("win-message").style.display = "none";
-
   //removing background image
   let playground = document.querySelector("#image-container");
   playground.style.backgroundImage = `none`;
@@ -170,6 +196,7 @@ function reset() {
 function start() {
   let array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   reset();
+  startClock();
   console.log("[random1 shuffling]");
   let random1 = shuffler(array);
   console.log("[random2 shuffling] ");
